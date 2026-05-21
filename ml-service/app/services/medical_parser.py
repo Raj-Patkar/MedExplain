@@ -1,47 +1,50 @@
 import re
 
-NORMAL_RANGES = {
-    "hemoglobin": (13, 17),
-    "blood sugar": (70, 140),
-    "cholesterol": (125, 200)
-}
+from app.services.medical_dictionary import (
+    MEDICAL_PARAMETERS
+)
 
-def get_status(value, min_val, max_val):
-
-    if value < min_val:
-        return "LOW"
-
-    elif value > max_val:
-        return "HIGH"
-
-    return "NORMAL"
+from app.services.range_checker import (
+    get_status
+)
 
 
 def parse_medical_report(text: str):
 
     report = {}
 
-    patterns = {
-        "hemoglobin": r"hemoglobin\s*[:\-]?\s*(\d+\.?\d*)",
-        "blood sugar": r"blood sugar\s*[:\-]?\s*(\d+\.?\d*)",
-        "cholesterol": r"cholesterol\s*[:\-]?\s*(\d+\.?\d*)"
-    }
-
     lower_text = text.lower()
 
-    for key, pattern in patterns.items():
+    for parameter, details in MEDICAL_PARAMETERS.items():
 
-        match = re.search(pattern, lower_text)
+        aliases = details["aliases"]
 
-        if match:
+        for alias in aliases:
 
-            value = float(match.group(1))
+            pattern = rf"{alias}\s*[:\-]?\s*(\d+\.?\d*)"
 
-            min_val, max_val = NORMAL_RANGES[key]
+            match = re.search(pattern, lower_text)
 
-            report[key] = {
-                "value": value,
-                "status": get_status(value, min_val, max_val)
-            }
+            if match:
+
+                value = float(match.group(1))
+
+                status = get_status(
+                    value,
+                    details["min"],
+                    details["max"]
+                )
+
+                report[parameter] = {
+                    "value": value,
+                    "unit": details["unit"],
+                    "status": status,
+                    "normal_range": (
+                        f"{details['min']} - "
+                        f"{details['max']}"
+                    )
+                }
+
+                break
 
     return report

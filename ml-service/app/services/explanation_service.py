@@ -1,27 +1,34 @@
+from app.services.explanation_templates import (
+    EXPLANATION_TEMPLATES
+)
+
+
 def generate_explanation(parsed_data):
 
     if not parsed_data:
-        return "No important medical parameters detected."
+        return (
+            "No important medical parameters "
+            "were detected in the report."
+        )
 
     explanations = []
 
-    for key, details in parsed_data.items():
+    for parameter, details in parsed_data.items():
 
         status = details["status"]
 
-        if status == "HIGH":
-            explanations.append(
-                f"{key.title()} is higher than normal."
+        parameter_templates = (
+            EXPLANATION_TEMPLATES.get(parameter)
+        )
+
+        if parameter_templates:
+
+            explanation = (
+                parameter_templates.get(status)
             )
 
-        elif status == "LOW":
-            explanations.append(
-                f"{key.title()} is lower than normal."
-            )
+            explanations.append(explanation)
 
-        else:
-            explanations.append(
-                f"{key.title()} is within normal range."
-            )
+    final_summary = " ".join(explanations)
 
-    return " ".join(explanations)
+    return final_summary
