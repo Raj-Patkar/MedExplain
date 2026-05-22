@@ -10,3 +10,4 @@ numpy
 python-dotenv
 pydantic
 openai
+google-genai
