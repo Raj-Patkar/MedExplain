@@ -58,12 +58,36 @@ async def analyze_report(
         extracted_text
     )
 
-    explanation = generate_medical_insights(
+    llm_response = generate_medical_insights(
         parsed_data
     )
 
     return {
         "filename": file.filename,
+
         "extracted_values": parsed_data,
-        "summary": explanation
+
+        "overall_severity":
+            llm_response.get(
+                "overall_severity",
+                "unknown"
+            ),
+
+        "abnormal_findings":
+            llm_response.get(
+                "abnormal_findings",
+                []
+            ),
+
+        "recommendations":
+            llm_response.get(
+                "recommendations",
+                []
+            ),
+
+        "summary":
+            llm_response.get(
+                "summary",
+                ""
+            )
     }

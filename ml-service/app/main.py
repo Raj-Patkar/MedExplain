@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+
 from app.api.report import router as report_router
+from app.api.xray import router as xray_router
 
 app = FastAPI(
     title="MedExplain AI",
@@ -7,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(report_router)
+app.include_router(xray_router)
 
 @app.get("/")
 def root():
