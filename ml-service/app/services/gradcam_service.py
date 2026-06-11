@@ -207,7 +207,5 @@ def generate_heatmap_analysis(
     return {
         "region": region,
         "severity": severity,
-        "heatmap_image": str(
-            heatmap_path
-        )
+        "heatmap_image": f"/heatmaps/{heatmap_filename}"
     }

@@ -51,6 +51,15 @@ Rules:
 - Mention uncertainty when appropriate
 - Consider both report and X-ray together
 - Return JSON only
+
+Pay special attention to relationships between:
+
+- Blood markers
+- Infection indicators
+- X-ray findings
+
+If findings appear related, mention the possible connection.
+If findings do not appear related, mention that as well.
 """
 
     try:

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.staticfiles import StaticFiles
 from app.api.report import router as report_router
 from app.api.xray import router as xray_router
 from app.api.complete_analysis import (
@@ -9,7 +9,11 @@ app = FastAPI(
     title="MedExplain AI",
     version="1.0.0"
 )
-
+app.mount(
+    "/heatmaps",
+    StaticFiles(directory="uploads/heatmaps"),
+    name="heatmaps"
+)
 app.include_router(report_router)
 app.include_router(xray_router)
 app.include_router(complete_router)
