@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z
   .object({
@@ -45,7 +46,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -60,16 +61,41 @@ export function RegisterForm() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     setServerError(null);
-    try {
-      // Mock submit handler — backend integration pending
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      console.log("Register submitted:", values);
 
-      // Simulated failure example (remove once backend is connected):
-      // throw new Error("An account with this email already exists");
+    try {
+      const response = await fetch(
+        "/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            fullName: values.name,
+            email: values.email,
+            password: values.password,
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        setServerError(
+          data.message ||
+          "Registration failed"
+        );
+        return;
+      }
+
+      router.push("/login");
     } catch (err) {
       setServerError(
-        err instanceof Error ? err.message : "Unable to create account. Please try again."
+        err instanceof Error
+          ? err.message
+          : "Unable to create account"
       );
     }
   };

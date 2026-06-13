@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ROUTES } from "@/lib/constants";
-
+import { useRouter } from "next/navigation";
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Enter a valid email address"),
   password: z
@@ -25,7 +25,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -37,16 +37,40 @@ export function LoginForm() {
 
   const onSubmit = async (values: LoginFormValues) => {
     setServerError(null);
-    try {
-      // Mock submit handler — backend integration pending
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      console.log("Login submitted:", values);
 
-      // Simulated failure example (remove once backend is connected):
-      // throw new Error("Invalid email or password");
+    try {
+      const response = await fetch(
+        "/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        setServerError(
+          data.message ||
+          "Login failed"
+        );
+        return;
+      }
+
+      router.push("/dashboard");
     } catch (err) {
       setServerError(
-        err instanceof Error ? err.message : "Unable to sign in. Please try again."
+        err instanceof Error
+          ? err.message
+          : "Unable to sign in"
       );
     }
   };

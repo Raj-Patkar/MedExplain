@@ -32,7 +32,7 @@ export function AuthBrandPanel() {
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 max-w-md">
+      <div className="container-med relative z-10 max-w-md">
         <h2 className="text-3xl font-bold text-white leading-tight tracking-tight mb-4">
           Clinical-grade analysis, explained in plain language.
         </h2>

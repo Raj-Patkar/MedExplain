@@ -29,7 +29,18 @@ export function generateToken(
     }
   );
 }
+interface JwtPayload {
+  userId: string;
+  email: string;
+  iat?: number;
+  exp?: number;
+}
 
-export function verifyToken(token: string) {
-  return jwt.verify(token, JWT_SECRET);
+export function verifyToken(
+  token: string
+): JwtPayload {
+  return jwt.verify(
+    token,
+    JWT_SECRET
+  ) as JwtPayload;
 }

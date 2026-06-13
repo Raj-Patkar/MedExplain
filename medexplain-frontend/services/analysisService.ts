@@ -1,39 +1,116 @@
-import api from "@/lib/api";
-import { AnalysisResponse, AnalysisSummary } from "@/types/analysis";
+import { pool } from "@/lib/db";
 
-export const analysisService = {
-  async runCompleteAnalysis(
-    reportFile: File,
-    xrayFile: File,
-    onUploadProgress?: (progress: number) => void
-  ): Promise<AnalysisResponse> {
-    const formData = new FormData();
-    formData.append("report_file", reportFile);
-    formData.append("xray_file", xrayFile);
+const ML_SERVICE_URL =
+  process.env.NEXT_PUBLIC_ML_SERVICE_URL ||
+  "http://127.0.0.1:8000";
 
-    const { data } = await api.post<AnalysisResponse>("/analysis/complete", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      onUploadProgress: (progressEvent) => {
-        if (onUploadProgress && progressEvent.total) {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          onUploadProgress(progress);
-        }
-      },
-    });
-    return data;
-  },
+export async function createAnalysis(
+  reportFile: File,
+  xrayFile: File,
+  userId: string
+) {
+  const formData = new FormData();
 
-  async getAnalysis(id: string): Promise<AnalysisResponse> {
-    const { data } = await api.get<AnalysisResponse>(`/analysis/${id}`);
-    return data;
-  },
+  formData.append(
+    "report_file",
+    reportFile
+  );
 
-  async getRecentAnalyses(limit = 10): Promise<AnalysisSummary[]> {
-    const { data } = await api.get<AnalysisSummary[]>(`/analysis?limit=${limit}`);
-    return data;
-  },
+  formData.append(
+    "xray_file",
+    xrayFile
+  );
 
-  async deleteAnalysis(id: string): Promise<void> {
-    await api.delete(`/analysis/${id}`);
-  },
-};
+  const response = await fetch(
+    `${ML_SERVICE_URL}/analysis/complete-analysis`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Analysis service failed"
+    );
+  }
+
+  const result =
+    await response.json();
+
+  const saved =
+    await pool.query(
+      `
+      INSERT INTO analyses
+      (
+        user_id,
+        prediction,
+        confidence,
+        region,
+        severity,
+        summary,
+        heatmap_path,
+        analysis_json
+      )
+      VALUES
+      (
+        $1,$2,$3,$4,$5,$6,$7,$8
+      )
+      RETURNING id
+      `,
+      [
+        userId,
+        result.xray_analysis?.prediction,
+        result.xray_analysis?.confidence,
+        result.xray_analysis?.region,
+        result.xray_analysis?.severity,
+        result.combined_analysis?.summary,
+        result.xray_analysis?.heatmap_image,
+        JSON.stringify(result),
+      ]
+    );
+
+  return {
+    analysisId:
+      saved.rows[0].id,
+    result,
+  };
+}
+
+export async function getUserAnalyses(
+  userId: string
+) {
+  const result =
+    await pool.query(
+      `
+      SELECT *
+      FROM analyses
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      `,
+      [userId]
+    );
+
+  return result.rows;
+}
+
+export async function getAnalysisById(
+  analysisId: string,
+  userId: string
+) {
+  const result =
+    await pool.query(
+      `
+      SELECT *
+      FROM analyses
+      WHERE id = $1
+      AND user_id = $2
+      `,
+      [
+        analysisId,
+        userId,
+      ]
+    );
+
+  return result.rows[0];
+}
