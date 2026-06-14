@@ -22,7 +22,7 @@ export async function createAnalysis(
   );
 
   const response = await fetch(
-    `${ML_SERVICE_URL}/analysis/complete-analysis`,
+    `${ML_SERVICE_URL}/analysis/complete`,
     {
       method: "POST",
       body: formData,

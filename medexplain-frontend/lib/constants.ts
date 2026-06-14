@@ -6,6 +6,7 @@ export const ROUTES = {
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
   ANALYZE: "/dashboard/analyze",
+  HISTORY: "/dashboard/history",
   ANALYSIS: (id: string) => `/dashboard/analysis/${id}`,
 } as const;
 
