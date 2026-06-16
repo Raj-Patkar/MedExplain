@@ -8,6 +8,8 @@ interface CombinedAnalysisCardProps {
 }
 
 export function CombinedAnalysisCard({ data }: CombinedAnalysisCardProps) {
+  console.log("Combined Analysis:", data);
+  console.log("Severity:", data.overall_severity);
   const severityConfig = SEVERITY_CONFIG[data.overall_severity];
   const findings = data.combined_findings ?? [];
 

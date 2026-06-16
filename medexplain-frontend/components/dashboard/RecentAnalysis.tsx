@@ -112,7 +112,7 @@ export function RecentAnalyses({ analyses }: RecentAnalysesProps) {
                     </span>
                   </td>
                   <td className="px-5 py-3.5 text-slate-600 font-medium">
-                    {analysis.confidence.toFixed(1)}%
+                    {Number(analysis.confidence).toFixed(1)}%
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <Link

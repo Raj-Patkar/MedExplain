@@ -8,7 +8,14 @@ interface ReportAnalysisCardProps {
 }
 
 function ParameterRow({ value }: { value: ExtractedValue }) {
-    const config = PARAM_STATUS_CONFIG[value.status];
+    const status =
+        value.status?.toLowerCase();
+
+    const config =
+        PARAM_STATUS_CONFIG[
+        status as keyof typeof PARAM_STATUS_CONFIG
+        ] ??
+        PARAM_STATUS_CONFIG.normal;
 
     return (
         <div className="flex items-center justify-between gap-4 py-3 border-b border-slate-100 last:border-0">

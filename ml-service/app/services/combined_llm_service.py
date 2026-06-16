@@ -30,10 +30,16 @@ Analyze BOTH:
 Return ONLY valid JSON.
 
 {{
-  "overall_severity": "",
-  "summary": "",
-  "combined_findings": [],
-  "recommendations": []
+  "overall_severity": "None | Mild | Moderate | Severe",
+  "summary": "Patient-friendly explanation",
+  "combined_findings": [
+    "Finding 1",
+    "Finding 2"
+  ],
+  "recommendations": [
+    "Recommendation 1",
+    "Recommendation 2"
+  ]
 }}
 
 Medical Report:
@@ -46,11 +52,18 @@ X-Ray Findings:
 
 Rules:
 
+- Return ONLY valid JSON
+- Do not wrap response in markdown
+- Do not use ```json
 - Do not diagnose diseases
 - Explain findings in patient-friendly language
 - Mention uncertainty when appropriate
 - Consider both report and X-ray together
-- Return JSON only
+- overall_severity must be exactly one of:
+  None, Mild, Moderate, Severe
+- combined_findings must be an array of strings
+- recommendations must be an array of strings
+- summary must be a string
 
 Pay special attention to relationships between:
 
@@ -76,6 +89,7 @@ If findings do not appear related, mention that as well.
 
         content = response["message"]["content"]
 
+       
         cleaned = clean_json_response(
             content
         )
