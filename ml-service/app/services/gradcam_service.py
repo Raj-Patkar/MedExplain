@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import torch
 import torch.nn as nn
-
+import os
 from PIL import Image
 
 from torchvision import (
@@ -18,6 +18,14 @@ from pytorch_grad_cam.utils.image import (
     show_cam_on_image
 )
 
+HEATMAP_FOLDER = Path(
+    "uploads/heatmaps"
+)
+
+BASE_URL = os.getenv(
+    "BASE_URL",
+    "http://127.0.0.1:8000"
+)
 DEVICE = torch.device(
     "cuda" if torch.cuda.is_available()
     else "cpu"
@@ -207,5 +215,5 @@ def generate_heatmap_analysis(
     return {
         "region": region,
         "severity": severity,
-        "heatmap_image": f"/heatmaps/{heatmap_filename}"
+        "heatmap_image": f"{BASE_URL}/heatmaps/{heatmap_filename}"
     }
