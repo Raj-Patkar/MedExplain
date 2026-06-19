@@ -5,7 +5,7 @@ export const SEVERITY_CONFIG: Record<
   { label: string; badgeClass: string; barClass: string; textClass: string }
 > = {
   None: {
-    label: "None",
+    label: "Normal",
     badgeClass: "bg-green-50 text-green-700 border-green-200",
     barClass: "bg-green-500",
     textClass: "text-green-600",

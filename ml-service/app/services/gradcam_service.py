@@ -76,7 +76,8 @@ HEATMAP_FOLDER.mkdir(
 
 
 def generate_heatmap_analysis(
-    image_path: str
+    image_path: str,
+    prediction: str
 ):
 
     image = Image.open(
@@ -113,8 +114,11 @@ def generate_heatmap_analysis(
     ys, xs = np.where(
         binary_mask == 1
     )
+    if prediction == "NORMAL":
 
-    if len(xs) == 0:
+        region = "No Significant Region"
+        severity = "None"
+    elif len(xs) == 0:
 
         region = "No Significant Region"
 

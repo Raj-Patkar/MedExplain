@@ -82,7 +82,8 @@ async def analyze_complete(
 
     heatmap_data = (
         generate_heatmap_analysis(
-            xray_path
+            xray_path,
+            xray_prediction["prediction"]
         )
     )
 
