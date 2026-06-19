@@ -76,11 +76,11 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-md  ">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-10">
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">Welcome back</h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 mb-10">
           Sign in to access your medical analysis dashboard.
         </p>
       </div>
@@ -95,7 +95,7 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         {/* Email */}
-        <div>
+        <div >
           <Label htmlFor="email">Email address</Label>
           <Input
             id="email"
@@ -147,7 +147,7 @@ export function LoginForm() {
         </div>
 
         {/* Remember me + Forgot password */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-2">
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"

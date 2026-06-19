@@ -120,7 +120,7 @@ export function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-56 bg-white border-r border-slate-200 h-screen sticky top-0 flex-shrink-0">
+      <aside className="hidden lg:flex fixed left-0 top-0 z-40 w-56 h-screen flex-col bg-white border-r border-slate-200">
         <div className="flex items-center gap-2 h-16 px-4 border-b border-slate-200">
           <div className="w-7 h-7 bg-blue-600 rounded-md flex items-center justify-center">
             <Activity className="w-4 h-4 text-white" strokeWidth={2.5} />

@@ -8,7 +8,7 @@ export function Hero() {
       <div className="container-med">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center ">
           {/* Left copy */}
-          <div className="max-w-xl">
+          <div className=" max-w-xl">
             <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 border border-blue-100">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
               Powered by DenseNet121 + Phi-3

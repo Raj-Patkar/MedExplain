@@ -27,7 +27,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <div className="flex-1 flex items-center justify-center px-6 py-12 sm:px-8">
+        <div className="flex-1 flex items-center justify-center px-12 py-16 sm:px-16">
           <LoginForm />
         </div>
       </div>

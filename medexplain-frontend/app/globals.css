@@ -16,7 +16,7 @@
 
 * {
   box-sizing: border-box;
-  padding: 0;
+  padding: 3;
   margin: 0;
 }
 
@@ -126,10 +126,10 @@ body {
 
 .container-med {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .section-spacing {
@@ -137,7 +137,19 @@ body {
   padding-bottom: 4rem;
 }
 
+
+
 .section-spacing-lg {
   padding-top: 10rem;
   padding-bottom: 10rem;
+}
+
+.dashboard-main {
+  margin-left: 14rem;
+}
+
+@media (max-width: 1023px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
 }
