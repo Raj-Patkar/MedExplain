@@ -50,8 +50,10 @@ export default function AnalyzePage() {
   };
 
   const handleAnalyze = async () => {
-    if (!reportFile || !xrayFile) {
-      setFormError("Please upload both a medical report and a chest X-ray to continue.");
+    if (!reportFile && !xrayFile) {
+      setFormError(
+        "Please upload at least one file."
+      );
       return;
     }
     if (reportError || xrayError) {
@@ -133,7 +135,7 @@ export default function AnalyzePage() {
 
         <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p className="text-xs text-slate-400">
-            Both files are required. Your analysis will be saved to your account history.
+            Upload a report, an X-ray, or both. Your analysis will be saved to your account history.
           </p>
           <AnalysisButton onClick={handleAnalyze} disabled={isAnalyzing} loading={isAnalyzing} />
         </div>

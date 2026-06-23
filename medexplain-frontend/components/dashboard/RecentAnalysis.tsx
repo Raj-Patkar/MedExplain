@@ -81,8 +81,25 @@ export function RecentAnalyses({ analyses }: RecentAnalysesProps) {
           </thead>
           <tbody>
             {analyses.map((analysis) => {
-              const predictionConfig = PREDICTION_CONFIG[analysis.prediction];
-              const severityConfig = SEVERITY_CONFIG[analysis.severity];
+              const predictionConfig = analysis.prediction
+                ? PREDICTION_CONFIG[
+                analysis.prediction as keyof typeof PREDICTION_CONFIG
+                ]
+                : {
+                  label: "Report Only",
+                  badgeClass:
+                    "bg-slate-50 text-slate-600 border-slate-200",
+                };
+
+              const severityConfig = analysis.severity
+                ? SEVERITY_CONFIG[
+                analysis.severity as keyof typeof SEVERITY_CONFIG
+                ]
+                : {
+                  label: "-",
+                  badgeClass:
+                    "bg-slate-50 text-slate-600 border-slate-200",
+                };
               return (
                 <tr
                   key={analysis.id}
@@ -112,7 +129,11 @@ export function RecentAnalyses({ analyses }: RecentAnalysesProps) {
                     </span>
                   </td>
                   <td className="px-5 py-3.5 text-slate-600 font-medium">
-                    {Number(analysis.confidence).toFixed(1)}%
+                    {
+                      analysis.confidence
+                        ? `${Number(analysis.confidence).toFixed(1)}%`
+                        : "-"
+                    }
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <Link
@@ -132,8 +153,25 @@ export function RecentAnalyses({ analyses }: RecentAnalysesProps) {
       {/* Mobile cards */}
       <div className="sm:hidden divide-y divide-slate-50">
         {analyses.map((analysis) => {
-          const predictionConfig = PREDICTION_CONFIG[analysis.prediction];
-          const severityConfig = SEVERITY_CONFIG[analysis.severity];
+          const predictionConfig = analysis.prediction
+            ? PREDICTION_CONFIG[
+            analysis.prediction as keyof typeof PREDICTION_CONFIG
+            ]
+            : {
+              label: "Report Only",
+              badgeClass:
+                "bg-slate-50 text-slate-600 border-slate-200",
+            };
+
+          const severityConfig = analysis.severity
+            ? SEVERITY_CONFIG[
+            analysis.severity as keyof typeof SEVERITY_CONFIG
+            ]
+            : {
+              label: "-",
+              badgeClass:
+                "bg-slate-50 text-slate-600 border-slate-200",
+            };
           return (
             <Link
               key={analysis.id}

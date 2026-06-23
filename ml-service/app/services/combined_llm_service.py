@@ -22,10 +22,15 @@ def generate_combined_insights(
     prompt = f"""
 You are a medical AI assistant.
 
-Analyze BOTH:
+Analyze the provided medical information.
 
-1. Structured medical report findings
-2. Chest X-ray findings
+The input may contain:
+
+1. Medical report findings only
+2. Chest X-ray findings only
+3. Both report and X-ray findings
+
+Use whatever information is available.
 
 Return ONLY valid JSON.
 
@@ -58,7 +63,11 @@ Rules:
 - Do not diagnose diseases
 - Explain findings in patient-friendly language
 - Mention uncertainty when appropriate
-- Consider both report and X-ray together
+If both report and X-ray findings are available,
+consider them together.
+
+If only one source is available,
+base your explanation only on that source.
 - overall_severity must be exactly one of:
   None, Mild, Moderate, Severe
 - combined_findings must be an array of strings

@@ -2,78 +2,53 @@ import { NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
-import {
-  createAnalysis,
-} from "@/services/analysisService";
+import { createAnalysis } from "@/services/analysisService";
 
-export async function POST(
-  request: Request
-) {
+export async function POST(request: Request) {
   try {
-    const user =
-      await getCurrentUser();
+    const user = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json(
         {
-          error:
-            "Unauthorized",
+          error: "Unauthorized",
         },
         {
           status: 401,
-        }
+        },
       );
     }
 
-    const formData =
-      await request.formData();
+    const formData = await request.formData();
 
-    const reportFile =
-      formData.get(
-        "report_file"
-      ) as File;
+    const reportFile = formData.get("report_file") as File;
 
-    const xrayFile =
-      formData.get(
-        "xray_file"
-      ) as File;
+    const xrayFile = formData.get("xray_file") as File;
 
-    if (
-      !reportFile ||
-      !xrayFile
-    ) {
+    if (!reportFile && !xrayFile) {
       return NextResponse.json(
         {
-          error:
-            "Both files required",
+          error: "At least one file required",
         },
         {
           status: 400,
-        }
+        },
       );
     }
 
-    const result =
-      await createAnalysis(
-        reportFile,
-        xrayFile,
-        user.userId
-      );
+    const result = await createAnalysis(reportFile, xrayFile, user.userId);
 
-    return NextResponse.json(
-      result
-    );
+    return NextResponse.json(result);
   } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
-        error:
-          "Analysis failed",
+        error: "Analysis failed",
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

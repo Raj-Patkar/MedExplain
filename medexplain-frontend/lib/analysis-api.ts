@@ -47,13 +47,18 @@ export const analysisApi = {
   },
 
   async create(
-    reportFile: File,
-    xrayFile: File,
-    onUploadProgress?: (percent: number) => void
+    reportFile: File | null,
+    xrayFile: File | null,
+    onUploadProgress?: (percent: number) => void,
   ): Promise<CreateAnalysisResponse> {
     const formData = new FormData();
-    formData.append("report_file", reportFile);
-    formData.append("xray_file", xrayFile);
+    if (reportFile) {
+      formData.append("report_file", reportFile);
+    }
+
+    if (xrayFile) {
+      formData.append("xray_file", xrayFile);
+    }
 
     // Use XHR for upload progress; fetch doesn't expose it.
     return new Promise((resolve, reject) => {
@@ -84,7 +89,8 @@ export const analysisApi = {
         }
       };
 
-      xhr.onerror = () => reject(new ApiError("Network error. Please try again.", 0));
+      xhr.onerror = () =>
+        reject(new ApiError("Network error. Please try again.", 0));
 
       xhr.send(formData);
     });

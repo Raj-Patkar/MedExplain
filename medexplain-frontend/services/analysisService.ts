@@ -1,46 +1,36 @@
 import { pool } from "@/lib/db";
 
 const ML_SERVICE_URL =
-  process.env.NEXT_PUBLIC_ML_SERVICE_URL ||
-  "http://127.0.0.1:8000";
+  process.env.NEXT_PUBLIC_ML_SERVICE_URL || "http://127.0.0.1:8000";
 
 export async function createAnalysis(
-  reportFile: File,
-  xrayFile: File,
-  userId: string
+  reportFile: File | null,
+  xrayFile: File | null,
+  userId: string,
 ) {
   const formData = new FormData();
 
-  formData.append(
-    "report_file",
-    reportFile
-  );
-
-  formData.append(
-    "xray_file",
-    xrayFile
-  );
-
-  const response = await fetch(
-    `${ML_SERVICE_URL}/analysis/complete`,
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      "Analysis service failed"
-    );
+  if (reportFile) {
+    formData.append("report_file", reportFile);
   }
 
-  const result =
-    await response.json();
+  if (xrayFile) {
+    formData.append("xray_file", xrayFile);
+  }
 
-  const saved =
-    await pool.query(
-      `
+  const response = await fetch(`${ML_SERVICE_URL}/analysis/complete`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Analysis service failed");
+  }
+
+  const result = await response.json();
+
+  const saved = await pool.query(
+    `
       INSERT INTO analyses
       (
         user_id,
@@ -58,59 +48,48 @@ export async function createAnalysis(
       )
       RETURNING id
       `,
-      [
-        userId,
-        result.xray_analysis?.prediction,
-        result.xray_analysis?.confidence,
-        result.xray_analysis?.region,
-        result.xray_analysis?.severity,
-        result.combined_analysis?.summary,
-        result.xray_analysis?.heatmap_image,
-        JSON.stringify(result),
-      ]
-    );
+    [
+      userId,
+      result.xray_analysis?.prediction,
+      result.xray_analysis?.confidence,
+      result.xray_analysis?.region,
+      result.xray_analysis?.severity,
+      result.combined_analysis?.summary,
+      result.xray_analysis?.heatmap_image,
+      JSON.stringify(result),
+    ],
+  );
 
   return {
-    analysisId:
-      saved.rows[0].id,
+    analysisId: saved.rows[0].id,
     result,
   };
 }
 
-export async function getUserAnalyses(
-  userId: string
-) {
-  const result =
-    await pool.query(
-      `
+export async function getUserAnalyses(userId: string) {
+  const result = await pool.query(
+    `
       SELECT *
       FROM analyses
       WHERE user_id = $1
       ORDER BY created_at DESC
       `,
-      [userId]
-    );
+    [userId],
+  );
 
   return result.rows;
 }
 
-export async function getAnalysisById(
-  analysisId: string,
-  userId: string
-) {
-  const result =
-    await pool.query(
-      `
+export async function getAnalysisById(analysisId: string, userId: string) {
+  const result = await pool.query(
+    `
       SELECT *
       FROM analyses
       WHERE id = $1
       AND user_id = $2
       `,
-      [
-        analysisId,
-        userId,
-      ]
-    );
+    [analysisId, userId],
+  );
 
   return result.rows[0];
 }

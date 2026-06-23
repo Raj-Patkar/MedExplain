@@ -128,20 +128,46 @@ export default function AnalysisDetailPage() {
       </div>
 
       <div className="space-y-5">
-        {/* Report + X-ray side by side on larger screens */}
-        <div className="grid lg:grid-cols-2 gap-5">
-          <ReportAnalysisCard data={report_analysis} />
-          <XrayAnalysisCard data={xray_analysis} />
-        </div>
 
-        {/* Heatmap */}
-        <HeatmapViewer src={xray_analysis.heatmap_image} region={xray_analysis.region} />
+        {(report_analysis || xray_analysis) && (
+          <div className="grid lg:grid-cols-2 gap-5">
 
-        {/* Combined AI explanation */}
-        <CombinedAnalysisCard data={combined_analysis} />
+            {report_analysis && (
+              <ReportAnalysisCard
+                data={report_analysis}
+              />
+            )}
 
-        {/* Recommendations */}
-        <RecommendationsCard recommendations={combined_analysis.recommendations ?? []} />
+            {xray_analysis && (
+              <XrayAnalysisCard
+                data={xray_analysis}
+              />
+            )}
+
+          </div>
+        )}
+
+        {xray_analysis && (
+          <HeatmapViewer
+            src={xray_analysis.heatmap_image}
+            region={xray_analysis.region}
+          />
+        )}
+
+        {combined_analysis && (
+          <>
+            <CombinedAnalysisCard
+              data={combined_analysis}
+            />
+
+            <RecommendationsCard
+              recommendations={
+                combined_analysis.recommendations ?? []
+              }
+            />
+          </>
+        )}
+
       </div>
     </div>
   );
