@@ -19,8 +19,6 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: ROUTES.DASHBOARD },
   { icon: ScanLine, label: "New Analysis", href: ROUTES.ANALYZE },
-  { icon: ClipboardList, label: "History", href: ROUTES.HISTORY },
-  { icon: User, label: "Profile", href: "/dashboard/profile" },
 ];
 
 export function Sidebar() {

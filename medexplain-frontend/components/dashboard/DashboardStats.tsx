@@ -38,12 +38,6 @@ export function DashboardStats({ analyses }: DashboardStatsProps) {
       iconClass: "bg-red-50 text-red-600",
     },
     {
-      label: "Average Confidence",
-      value: total > 0 ? `${avgConfidence.toFixed(1)}%` : "—",
-      icon: Gauge,
-      iconClass: "bg-indigo-50 text-indigo-600",
-    },
-    {
       label: "Last Analysis",
       value: lastAnalysis ? formatDate(lastAnalysis.created_at) : "—",
       icon: Clock,

@@ -31,13 +31,7 @@ export default function DashboardPage() {
 
         {/* Quick actions */}
         <div className="flex items-center gap-3 flex-shrink-0">
-          <Link
-            href={ROUTES.HISTORY}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors text-sm font-medium h-10 px-4"
-          >
-            <History className="w-4 h-4" />
-            View History
-          </Link>
+          
           <Link
             href={ROUTES.ANALYZE}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium h-10 px-4"
