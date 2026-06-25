@@ -368,20 +368,7 @@ Create a `.env` file:
 BASE_URL=http://127.0.0.1:8000
 ```
 
----
 
-# Screenshots
-
-Add screenshots of:
-
-* Landing Page
-* Login
-* Dashboard
-* Analysis Upload
-* Report Analysis
-* X-ray Analysis
-* Heatmap
-* Combined AI Analysis
 
 ---
 
