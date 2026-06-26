@@ -4,9 +4,10 @@ from torchvision import models, transforms
 from PIL import Image
 from pathlib import Path
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
-MODEL_PATH = Path("app/models/best_model.pth")
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / "models" / "best_model.pth"
 
 model = models.densenet121(weights=None)
 

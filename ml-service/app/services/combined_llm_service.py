@@ -1,6 +1,17 @@
 import json
 import re
-import ollama
+import os
+
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+MODEL_NAME = "gemini-2.5-flash"
 
 
 def clean_json_response(content):
@@ -63,15 +74,20 @@ Rules:
 - Do not diagnose diseases
 - Explain findings in patient-friendly language
 - Mention uncertainty when appropriate
+
 If both report and X-ray findings are available,
 consider them together.
 
 If only one source is available,
 base your explanation only on that source.
+
 - overall_severity must be exactly one of:
   None, Mild, Moderate, Severe
+
 - combined_findings must be an array of strings
+
 - recommendations must be an array of strings
+
 - summary must be a string
 
 Pay special attention to relationships between:
@@ -81,35 +97,27 @@ Pay special attention to relationships between:
 - X-ray findings
 
 If findings appear related, mention the possible connection.
-If findings do not appear related, mention that as well.
+
+If findings do not appear related,
+mention that as well.
 """
 
     try:
 
-        response = ollama.chat(
-            model="phi3",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
         )
 
-        content = response["message"]["content"]
-
-       
-        cleaned = clean_json_response(
-            content
-        )
+        cleaned = clean_json_response(response.text)
 
         return json.loads(cleaned)
 
-    except Exception as e:
+    except Exception as error:
 
         return {
             "overall_severity": "unknown",
-            "summary": str(e),
+            "summary": str(error),
             "combined_findings": [],
             "recommendations": []
         }

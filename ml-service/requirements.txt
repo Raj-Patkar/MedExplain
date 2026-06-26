@@ -1,38 +1,27 @@
-# FastAPI
 fastapi==0.116.1
 uvicorn[standard]==0.35.0
 python-multipart==0.0.20
 
-# Environment
 python-dotenv==1.1.1
 
-# PDF Processing
 PyMuPDF==1.26.3
 pdfplumber==0.11.7
 pytesseract==0.3.13
 
-# Image Processing
 Pillow==11.3.0
 opencv-python-headless==4.12.0.88
 
-# Data Processing
 numpy==2.2.6
 pandas==2.3.0
 
-# AI / ML
 torch==2.7.1
 torchvision==0.22.1
 
-# Grad-CAM
 grad-cam==1.5.5
 
-# API Models
 pydantic==2.11.7
 
-# LLM APIs
 google-genai==1.26.0
 openai==1.93.0
 
-# Utilities
 requests==2.32.4
-tqdm==4.67.1

@@ -1,102 +1,84 @@
 import json
 import re
-import ollama
+import os
+
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+MODEL_NAME = "gemini-2.5-flash"
 
 
 def clean_json_response(content):
-
     content = content.strip()
 
-    content = re.sub(
-        r"^```json",
-        "",
-        content
-    )
+    content = re.sub(r"^```json", "", content)
+    content = re.sub(r"^```", "", content)
+    content = re.sub(r"```$", "", content)
 
-    content = re.sub(
-        r"^```",
-        "",
-        content
-    )
-
-    content = re.sub(
-        r"```$",
-        "",
-        content
-    )
-
-    content = content.strip()
-
-    return content
+    return content.strip()
 
 
 def generate_medical_insights(parsed_data):
 
     if not parsed_data:
-
         return {
             "overall_severity": "normal",
             "abnormal_findings": [],
             "recommendations": [],
-            "summary": (
-                "No important medical findings "
-                "were detected."
-            )
+            "summary": "No important medical findings were detected."
         }
 
     prompt = f"""
-    You are a medical AI assistant.
+You are a medical AI assistant.
 
-    Analyze the following medical report.
+Analyze the following medical report.
 
-    Return ONLY valid JSON.
+Return ONLY valid JSON.
 
-    JSON format:
+JSON format:
 
+{{
+  "overall_severity": "",
+  "abnormal_findings": [
     {{
-      "overall_severity": "",
-      "abnormal_findings": [
-        {{
-          "parameter": "",
-          "status": "",
-          "concern": ""
-        }}
-      ],
-      "recommendations": [],
-      "summary": ""
+      "parameter": "",
+      "status": "",
+      "concern": ""
     }}
+  ],
+  "recommendations": [],
+  "summary": ""
+}}
 
-    Rules:
-    - Return ONLY JSON
-    - No markdown
-    - No explanations outside JSON
-    - Use concise medical reasoning
-    - Do NOT diagnose diseases
-    - Mention uncertainty when appropriate
+Rules:
+- Return ONLY JSON
+- No markdown
+- No explanations outside JSON
+- Use concise medical reasoning
+- Do NOT diagnose diseases
+- Mention uncertainty when appropriate
 
-    Medical Report:
-    {json.dumps(parsed_data, indent=2)}
-    """
+Medical Report:
+
+{json.dumps(parsed_data, indent=2)}
+"""
 
     try:
 
-        response = ollama.chat(
-            model="phi3",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
         )
 
-        content = response["message"]["content"]
+        cleaned = clean_json_response(response.text)
 
-        cleaned_content = clean_json_response(
-            content
-        )
-
-        return json.loads(cleaned_content)
+        return json.loads(cleaned)
 
     except Exception as error:
 
@@ -104,7 +86,5 @@ def generate_medical_insights(parsed_data):
             "overall_severity": "unknown",
             "abnormal_findings": [],
             "recommendations": [],
-            "summary": (
-                f"LLM analysis failed: {str(error)}"
-            )
+            "summary": f"LLM analysis failed: {str(error)}"
         }
