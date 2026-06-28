@@ -1,27 +1,27 @@
-fastapi==0.116.1
-uvicorn[standard]==0.35.0
-python-multipart==0.0.20
+fastapi
+uvicorn[standard]
+python-multipart
 
-python-dotenv==1.1.1
+python-dotenv
 
-PyMuPDF==1.26.3
-pdfplumber==0.11.7
-pytesseract==0.3.13
+PyMuPDF
+pdfplumber
+pytesseract
 
-Pillow==11.3.0
-opencv-python-headless==4.12.0.88
+Pillow
+opencv-python-headless
 
-numpy==2.2.6
-pandas==2.3.0
+numpy
+pandas
 
-torch==2.7.1
-torchvision==0.22.1
+torch
+torchvision
 
-grad-cam==1.5.5
+grad-cam
 
-pydantic==2.11.7
+pydantic
 
-google-genai==1.26.0
-openai==1.93.0
+google-genai
+openai
 
-requests==2.32.4
+requests
